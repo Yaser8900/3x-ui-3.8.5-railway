@@ -33,10 +33,9 @@ COPY --from=frontend /src/internal/web/dist ./internal/web/dist
 
 ENV CGO_ENABLED=1
 ENV CGO_CFLAGS="-D_LARGEFILE64_SOURCE"
-# Railway-friendly Go module fallback chain. The | separator allows fallback
-# on network/availability errors as well as normal proxy misses.
 ENV GOPROXY="https://proxy.golang.org|https://goproxy.io|https://goproxy.cn|https://proxy.golang.com.cn|https://mirrors.aliyun.com/goproxy|direct"
 ENV GOSUMDB="sum.golang.org"
+
 RUN go mod download
 RUN go mod verify
 RUN go build -ldflags "-w -s" -o build/x-ui main.go
@@ -83,7 +82,6 @@ ENV XUI_DB_TYPE=""
 ENV XUI_DB_DSN=""
 
 EXPOSE 2053
-VOLUME ["/etc/x-ui"]
 
 ENTRYPOINT ["/app/RailwayEntrypoint.sh"]
 CMD ["./x-ui"]
